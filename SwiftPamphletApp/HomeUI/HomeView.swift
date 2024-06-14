@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import InfoOrganizer
+import SMGitHub
 
 struct HomeView: View {
-    @State var appVM = AppVM()
-    @State private var selectedDataLinkString: String?
+    @State private var selectedDataLinkString: String = ""
     @State private var selectInfo: IOInfo? = nil
     @State private var selectDev: DeveloperModel? = nil
+    @AppStorage(SPC.selectedDataLinkString) var sdLinkStr: String = ""
+    
+    @AppStorage(SPC.isFirstRun) var isFirstRun = true
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationSplitView {
@@ -20,9 +25,9 @@ struct HomeView: View {
                 selectInfo: $selectInfo
             )
         } content: {
-            if let link = selectedDataLinkString {
+            if !selectedDataLinkString.isEmpty {
                 DataLink.viewToShow(
-                    for: link,
+                    for: selectedDataLinkString,
                     selectInfo: $selectInfo,
                     selectDev: $selectDev,
                     selectInfoBindable: selectInfo,
@@ -39,24 +44,42 @@ struct HomeView: View {
             }
         } detail: {
             
-            if let link = selectedDataLinkString {
+            if !selectedDataLinkString.isEmpty {
                 DataLink.viewToShow(
-                    for: link,
+                    for: selectedDataLinkString,
                     selectInfo: $selectInfo,
                     selectDev: $selectDev,
                     selectInfoBindable: selectInfo,
-                    selectDevBindable: selectDev,
+                    selectDevBindable: selectDev, 
                     type: .detail
                 )
             } else {
-                ContentUnavailableView {
-                    Label("未选",
-                          systemImage: "pencil.tip.crop.circle.badge.plus")
-                } description: {
-                    Text("请选择或按+号添加内容")
-                }
+                IntroView()
             }
         }
-        .environment(appVM)
+        .onAppear(perform: {
+            if isFirstRun {
+                isFirstRun = false
+                // 第一次运行需要处理的
+            }
+            selectedDataLinkString = sdLinkStr
+            _ = WWDCViewModel()
+        })
+        .onChange(of: selectedDataLinkString, {
+            sdLinkStr = selectedDataLinkString
+        })
+        .onChange(of: scenePhase, {
+            guard scenePhase == .active else { return } // 只处理 active 状态
+            debugPrint("active")
+        })
+        .task {
+            #if DEBUG
+            let sandboxDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            print(sandboxDirectory.debugDescription)
+            #endif
+        }
+        .onOpenURL(perform: { url in
+            // 处理外部链接
+        })
     }
 }

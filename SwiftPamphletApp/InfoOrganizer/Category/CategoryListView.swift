@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import InfoOrganizer
 
 struct CategoryListView: View {
     @Environment(\.modelContext) var modelContext
@@ -15,12 +16,17 @@ struct CategoryListView: View {
     
     var body: some View {
         List(selection: $selectCate) {
-            ForEach(cates) { cate in
-                NavigationLink(value: cate) {
-                    CategoryRowView(cate: cate, selectedCate: selectCate)
+            Section("编辑分类") {
+                ForEach(cates) { cate in
+                    NavigationLink(value: cate) {
+                        CategoryRowView(cate: cate, selectedCate: selectCate)
+                    }
                 }
             }
         }
+
     }
+    
+
 }
 

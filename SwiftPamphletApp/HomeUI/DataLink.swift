@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import InfoOrganizer
+import SMGitHub
 
 struct DataLink: Identifiable {
     let id = UUID()
     let title: String
     let imageName: String
+    var color: Color = Color.primary
     var children: [DataLink]?
     
     enum ShowType {
@@ -27,7 +30,7 @@ struct DataLink: Identifiable {
         type: ShowType
     ) -> some View {
         switch title {
-        case "资料整理":
+        case "全部资料":
             switch type {
             case .content:
                 InfoListView(selectInfo: selectInfo)
@@ -35,60 +38,111 @@ struct DataLink: Identifiable {
                 if let info = selectInfoBindable {
                     EditInfoView(info: info)
                 } else {
-                    EmptyView()
+                    IntroView()
                 }
             }
-        case "开发者":
+        case "未分类":
+            switch type {
+            case .content:
+                UnCategoryInfoListView(selectInfo: selectInfo)
+            case .detail:
+                if let info = selectInfoBindable {
+                    EditInfoView(info: info)
+                } else {
+                    IntroView()
+                }
+            }
+        case "收藏":
+            switch type {
+            case .content:
+                StarInfoListView(selectInfo: selectInfo)
+            case .detail:
+                if let info = selectInfoBindable {
+                    EditInfoView(info: info)
+                } else {
+                    IntroView()
+                }
+            }
+        case "归档":
+            switch type {
+            case .content:
+                ArchivedInfoListView(selectInfo: selectInfo)
+            case .detail:
+                if let info = selectInfoBindable {
+                    EditInfoView(info: info)
+                } else {
+                    IntroView()
+                }
+            }
+        case "开发/仓库":
             switch type {
             case .content:
                 DeveloperListView(selectDev:selectDev)
             case .detail:
                 if let dev = selectDevBindable {
                     if SPC.gitHubAccessToken.isEmpty == false || SPC.githubAccessToken().isEmpty == false {
-                        EditDeveloper(dev: dev, vm: UserVM(userName: dev.name))
+                        EditDeveloper(dev: dev, repoVM: APIRepoVM(name: dev.name), userVM: APIUserVM(name: dev.name))
                     } else {
-                        Text("请在设置里写上 Github 的 access token")
+                        EditDeveloper(dev: dev, repoVM: APIRepoVM(name: dev.name), userVM: APIUserVM(name: dev.name), needSetGithubAccessToken: true)
                     }
+                    
                 } else {
-                    EmptyView()
+                    IntroView()
                 }
             }
-        case "语法速查":
-            IssuesListFromCustomView(vm: IssueVM(guideName: "guide-syntax"))
-        case "特性":
-            IssuesListFromCustomView(vm: IssueVM(guideName:"guide-features"))
-        case "专题":
-            IssuesListFromCustomView(vm: IssueVM(guideName:"guide-subject"))
-        case "SwiftUI":
-            IssuesListFromCustomView(vm: IssueVM(guideName:"lib-SwiftUI"))
-        case "Combine":
-            IssuesListFromCustomView(vm: IssueVM(guideName:"lib-Combine"))
-        case "Concurrency":
-            IssuesListFromCustomView(vm: IssueVM(guideName:"lib-Concurrency"))
+        case "Apple技术":
+            switch type {
+            case .content:
+                GuideListView()
+            case .detail:
+                IntroView()
+            }
+        case "WWDC":
+            switch type {
+            case .content:
+                WWDCListView()
+            case .detail:
+                IntroView()
+            }
+        case "书签":
+            switch type {
+            case .content:
+                BookmarkListView()
+            case .detail:
+                IntroView()
+            }
         default:
-            // 默认是语法速查
-            IssuesListFromCustomView(vm: IssueVM(guideName: "guide-syntax"))
-        }
+            switch type {
+            case .content:
+                // 默认
+                GuideListView()
+            case .detail:
+                IntroView()
+            }
+        } // end switch
     }
 }
 
 extension DataLink {
     static var dataLinks = [
-        DataLink(title: "资料", imageName: "", children: [
-            DataLink(title: "资料整理", imageName: "p11")
+        DataLink(title: "开发手册", imageName: "", children: [
+            DataLink(title: "书签", imageName: "p24", color: .mint),
+            DataLink(title: "Apple技术", imageName: "p19", color: .indigo),
+            DataLink(title: "WWDC", imageName: "p22")
         ]),
-        DataLink(title: "Github", imageName: "", children: [
-            DataLink(title: "开发者", imageName: "p5"),
-        ]),
-        DataLink(title: "Swift指南", imageName: "", children: [
-            DataLink(title: "语法速查", imageName: "p23"),
-            DataLink(title: "特性", imageName: "p10"),
-            DataLink(title: "专题", imageName: "p12")
-        ]),
-        DataLink(title: "库使用指南", imageName: "", children: [
-            DataLink(title: "SwiftUI", imageName: "p3"),
-            DataLink(title: "Combine", imageName: "p19"),
-            DataLink(title: "Concurrency", imageName: "p1")
+        DataLink(title: "资料整理", imageName: "", children: [
+            DataLink(title: "全部资料", imageName: "p7", color: .cyan),
+            DataLink(title: "未分类", imageName: "p6"),
+            DataLink(title: "收藏", imageName: "p11"),
+            DataLink(title: "归档", imageName: "p3")
         ])
     ]
+    static func dataLinksWithGithub() -> [DataLink] {
+        var arr = DataLink.dataLinks
+        arr.append(
+            DataLink(title: "Github", imageName: "", children: [
+                DataLink(title: "开发/仓库", imageName: "p5", color: .green),
+            ]))
+        return arr
+    }
 }

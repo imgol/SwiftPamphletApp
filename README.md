@@ -1,60 +1,44 @@
-# 戴铭的开发小册子 5.0
+# 戴铭的开发小册子 6.0
+[![Available on the App Store](https://ming1016.github.io/qdimg/badge-download-on-the-mac-app-store.svg)](https://apps.apple.com/cn/app/id1609702529)
 
-Swift开发的手册，是个 macOS 程序。[在线文字版](https://ming1016.github.io/2021/11/23/daiming-swift-pamphlet/)
-![](https://user-images.githubusercontent.com/251980/153746040-8379ad07-4f64-4cb2-b162-40a80fb87d6b.PNG)
+Swift开发的手册，是个 macOS 程序，已上线macOS应用商店，[点击购买安装(98元)](https://apps.apple.com/cn/app/%E6%88%B4%E9%93%AD%E7%9A%84%E5%BC%80%E5%8F%91%E5%B0%8F%E5%86%8C%E5%AD%90/id1609702529?mt=12)，或直接在商店搜索“戴铭”关键字。安装应用方便更新程序。小册子5.0 的文字版 《[戴铭的 Swift 小册子](https://starming.com/2021/11/23/daiming-swift-pamphlet/)》，6.0 新增的文字内容也可以在我博客上看。
 
-## 下载
+本手册使用 SwiftData、Observable、NavigationSplitView 进行了重构，现在可自己添加管理资料，和知识点做关联。
 
-直接下载最新 dmg 使用：[戴铭的开发小册子5.0.dmg.zip](https://github.com/KwaiAppTeam/SwiftPamphletApp/files/9052632/5.0.dmg.zip)
+内容主要包含
 
-## 编译
+- Apple 技术知识点以及示例
+- 历年 WWDC
 
-自己编译生成程序的方法是：
+功能主要包含
 
-### 方式一：本地编译
+- 手册书签收藏
+- 资料收集整理
+- 离线保存资料
+- 知识点和资料关联
+- 手册、WWDC和资料可搜索
+- Github 开发者和仓库信息添加管理
 
-* 拉代码。直接编译生成无 Github 功能的手册程序。
-* 如要带 Github 功能可在 SwiftPamphletAppConfig.swift 里 gitHubAccessToken 加入你的 GitHub Access Token。GitHub Access Token 在  [Personal Access Tokens](https://github.com/settings/tokens)  这里获取。记得scope 勾上 repo 和 user。
-* 使用Xcode编译生成这个手册程序或是连点两下compile.command。
+本应用知识点目前主要有 Swift 基础语法，SwiftUI，SwiftData，小组件等知识内容。
 
-Xcode 和 macOS 都需要升到最新版。如果遇到 swift package 下载不下来的情况，参看这个议题来解决：[Issue #88](https://github.com/KwaiAppTeam/SwiftPamphletApp/issues/88)
+本版本解决了以下几个问题。
 
-### 方式二：云编译
+第一个，存储的问题。以前使用的是三方数据库，写法比较繁琐且和 SwiftUI 结合的不好。现在用的是 SwiftData，写法简洁了很多，代码也好维护了。更多技术重构细节可以直接查看代码。
 
-***无需 Xcode 设置开发人员帐号编译***
+第二，手册内容和资料之间的关系。以前比较隔离，资料和手册没有联系。现在采用的是每个知识点都可以添加相关资料，这样更利于知识的积累。
 
-* 可使用 compile.command 编译手册程序，无需开启 Xcode 设置个人开发帐号，只需在 SwiftPamphletAppConfig.swift 里 gitHubAccessToken 加入你的 [GitHub Access Token](https://github.com/settings/tokens)，完成后连点 compile.command 两下等待作业完成。
-* 或使用 Github action workflow 编译（感谢[@powenn](https://github.com/powenn)），无需在本地操作、也无需开启 Xcode 设置个人开发帐号，只需设置 personal access token(PAT) 在 repository 设定中 action secrets，并命名为 PAT。Fork 此 repository，设置 PAT，手动启用 action，等候约3分钟即可下载档案，往后专案更新时，只需 fetch and merge，action 会自动进行。
+第三，Github 库和开发者信息的管理问题。以前添加和删除都在代码层面，现在可以直接在 App 内进行。
 
-英文说明：
-Requires storaging PAT to actions secrets and name it to PAT
+这三个问题解决后，可以将更多精力花在内容的更新增加以及 App 使用体验上了。
 
-- Fork this repository.
-- Go to get a Personal Access Token(PAT) if you haven't done it yet.(GitHub Access Token in [Personal Access Tokens](https://github.com/settings/tokens)，scope checked repo and user)
-- Set your token in action secrets ,and name it to PAT.
-- Get the compiled app package after Github action complete.
+![截屏2024-05-07 18 54 42](https://github.com/ming1016/SwiftPamphletApp/assets/251980/9514574b-0f20-4ff5-848c-9b5130f03b81)
 
-While project update ,you won't need to compile it manually in local, only need to fetch and merge commits and wait for about 3 minutes then download it
+![截屏2024-05-07 18 48 33](https://github.com/ming1016/SwiftPamphletApp/assets/251980/f748a32d-7f4d-4327-a4b5-97a65ca754ec)
 
-### 介绍
-小册子能够方便的查看 Swift 语法，还有一些主要库的使用指南，内容还在完善中，选择的库主要就是开发小册子应用使用到的 SwitUI、Combine、Swift Concurrency
+![截屏2024-05-07 18 49 43](https://github.com/ming1016/SwiftPamphletApp/assets/251980/bb147ab7-5cbc-4263-a023-b924054a0f4b)
 
-除了这些速查和库的使用内容外，这个应用还有一些开发者的动态，当他们有新的动作，比如提交了代码、star 了什么项目，提交和留言了议题都会直接在程序坞中提醒你。 
+![截屏2024-05-07 19 06 30](https://github.com/ming1016/SwiftPamphletApp/assets/251980/f590cbe5-8a94-41e3-8260-6492e3acf46e)
 
-![](https://ming1016.github.io/uploads/develop-macos-with-swiftui-combine-concurrency-aysnc-await-actor/15.png)
-
-我对一些库做了分类，方便按需查找，库有新的提交也会在程序坞中提醒。 
-
-![](https://ming1016.github.io/uploads/develop-macos-with-swiftui-combine-concurrency-aysnc-await-actor/16.png)
-
-还能方便的查看库的议题。比如在阮一峰的《科技爱好者周刊》的议题中可以看到有很多人推荐和自荐了一些信息。保留议题有一千六百多个。 
-
-![](https://ming1016.github.io/uploads/develop-macos-with-swiftui-combine-concurrency-aysnc-await-actor/17.png)
-
-博客动态的功能，可以跟进一些博客内容的更新。 
-
-代码说明参看这篇[《如何用 SwiftUI + Combine + Swift Concurrency Aysnc/Await Actor 欢畅开发》](https://ming1016.github.io/2022/01/03/develop-macos-with-swiftui-combine-concurrency-aysnc-await-actor/)文章
-
-小册子文字版 《[戴铭的 Swift 小册子](https://ming1016.github.io/2021/11/23/daiming-swift-pamphlet/)》
+![截屏2024-05-07 19 08 18](https://github.com/ming1016/SwiftPamphletApp/assets/251980/89b34786-44b1-4fcd-bdf6-8ad92ea80d4e)
 
 
